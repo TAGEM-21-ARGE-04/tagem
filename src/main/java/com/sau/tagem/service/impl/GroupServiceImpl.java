@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class GroupServiceImpl implements GroupService {
@@ -22,5 +24,10 @@ public class GroupServiceImpl implements GroupService {
         );
 
         return modelMapper.map(group, GroupDTO.class);
+    }
+
+    @Override
+    public List<GroupDTO> getAll() {
+        return groupRepository.getAll();
     }
 }
