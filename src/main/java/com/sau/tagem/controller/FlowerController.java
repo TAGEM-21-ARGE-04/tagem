@@ -1,5 +1,6 @@
 package com.sau.tagem.controller;
 
+import com.sau.tagem.dto.FlowerDTO;
 import com.sau.tagem.model.Flower;
 import com.sau.tagem.service.FlowerService;
 import com.sau.tagem.utils.GenericResponse;
@@ -17,7 +18,7 @@ public class FlowerController {
     private final FlowerService flowerService;
 
     @PostMapping
-    public GenericResponse<Flower> save(@RequestBody Flower flower) {
+    public GenericResponse<FlowerDTO> save(@RequestBody FlowerDTO flower) {
         return GenericResponse.success(flowerService.save(flower));
     }
 }
