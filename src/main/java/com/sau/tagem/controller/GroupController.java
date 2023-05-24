@@ -15,6 +15,13 @@ import java.util.List;
 public class GroupController {
     private final GroupService groupService;
 
+    @GetMapping("/{id}")
+    public GenericResponse<GroupDTO> getById(@PathVariable("id") Long id) {
+        return GenericResponse.success(
+                groupService.getById(id)
+        );
+    }
+
     @GetMapping
     public GenericResponse<List<GroupDTO>> getAll() {
         return GenericResponse.success(

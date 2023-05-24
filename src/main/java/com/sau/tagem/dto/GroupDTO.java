@@ -24,4 +24,11 @@ public class GroupDTO {
         this.name = name;
         this.description = description;
     }
+
+    public GroupDTO(Group group) {
+        this.id = group.getId();
+        this.name = group.getName();
+        this.description = group.getDescription();
+        this.flowers = group.getFlowers().stream().map(FlowerDTO::new).toList();
+    }
 }

@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface GroupRepository extends JpaRepository<Group, Long> {
     @Query(
@@ -14,4 +15,11 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
             "ORDER BY g.name  "
     )
     List<GroupDTO> getAll();
+
+    @Query(
+            "SELECT NEW com.sau.tagem.dto.GroupDTO(g) " +
+            "FROM Group g " +
+            "WHERE g.id = :id"
+    )
+    Optional<GroupDTO> getDetailsById(Long id);
 }

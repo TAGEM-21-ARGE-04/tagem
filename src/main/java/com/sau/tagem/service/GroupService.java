@@ -8,4 +8,6 @@ public interface GroupService {
     GroupDTO save(GroupDTO groupDTO);
 
     List<GroupDTO> getAll();
+
+    GroupDTO getById(Long id);
 }
