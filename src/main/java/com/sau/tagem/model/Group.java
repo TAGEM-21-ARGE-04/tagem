@@ -12,7 +12,7 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @Table(name = "t_group")
-public class Group {
+public class Group extends Auditable<Long> {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,6 +23,9 @@ public class Group {
 
     @Column(name = "description")
     private String description;
+
+    @Column(name = "flower_count")
+    private Integer flowerCount;
 
     @OneToMany(mappedBy = "group")
     List<Flower> flowers;
