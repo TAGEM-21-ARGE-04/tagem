@@ -22,4 +22,9 @@ public class Flower extends Auditable<Long> {
 
     @ManyToOne
     private Group group;
+
+    public Flower(int groupIndex, Group group) {
+        this.group = group;
+        this.groupIndex = groupIndex;
+    }
 }

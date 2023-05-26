@@ -17,13 +17,18 @@ public class FlowerServiceImpl implements FlowerService {
     @Override
     public FlowerDTO save(FlowerDTO flower) {
         return modelMapper.map(
-                flowerRepository.save(
-                        modelMapper.map(
-                                flower,
-                                Flower.class
-                        )
+                save(
+                    modelMapper.map(
+                            flower,
+                            Flower.class
+                    )
                 ),
                 FlowerDTO.class
         );
+    }
+
+    @Override
+    public Flower save(Flower flower) {
+        return flowerRepository.save(flower);
     }
 }

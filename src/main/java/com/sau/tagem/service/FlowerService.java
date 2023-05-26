@@ -9,4 +9,6 @@ import org.springframework.stereotype.Service;
 
 public interface FlowerService {
     FlowerDTO save(FlowerDTO flower);
+
+    Flower save(Flower flower);
 }
