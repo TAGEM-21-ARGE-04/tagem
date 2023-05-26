@@ -1,6 +1,9 @@
 package com.sau.tagem.controller;
 
+import com.sau.tagem.dto.request.QRCreate;
+import com.sau.tagem.service.QRService;
 import com.sau.tagem.utils.QRCodeGenerator;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.InputStreamResource;
@@ -9,9 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -24,8 +25,11 @@ import java.util.List;
 
 @Log4j2
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("api/qr")
 public class QRController {
+
+    private final QRService qrService;
 
     @GetMapping(value = "/{flowerId}")
     public ResponseEntity<InputStreamResource> generateQRCode(@PathVariable("flowerId") Long flowerId) throws Exception {
@@ -124,5 +128,10 @@ public class QRController {
         }
 
         return null;
+    }
+
+    @PostMapping
+    public ResponseEntity<byte[]> createQR(@RequestBody QRCreate qr) {
+        return qrService.createQR(qr);
     }
 }
