@@ -1,5 +1,6 @@
 package com.sau.tagem.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "t_measurement")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Measurement {
     @Id
     @Column(name = "id")
@@ -32,4 +34,11 @@ public class Measurement {
 
     @Column(name = "measurement_date")
     private LocalDateTime measurementDate = LocalDateTime.now();
+
+    public Measurement(Long flowerId, Integer leafCount, Integer leafVolume, LocalDateTime measurementDate) {
+        this.flowerId = flowerId;
+        this.leafCount = leafCount;
+        this.leafVolume = leafVolume;
+        this.measurementDate = measurementDate;
+    }
 }

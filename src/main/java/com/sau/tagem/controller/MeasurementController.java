@@ -4,10 +4,7 @@ import com.sau.tagem.dto.MeasurementGroupDTO;
 import com.sau.tagem.model.Measurement;
 import com.sau.tagem.service.MeasurementService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -17,6 +14,11 @@ import java.util.List;
 public class MeasurementController {
 
     private final MeasurementService measurementService;
+
+    @GetMapping("/{id}")
+    public List<Measurement> getAllByFlowerId(@PathVariable("id") Long id) {
+        return measurementService.getAllByFlowerId(id);
+    }
 
     @PostMapping
     public Boolean save(@RequestBody MeasurementGroupDTO measurementGroupDTO) {

@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -26,5 +27,10 @@ public class MeasurementServiceImpl implements MeasurementService {
         } catch (Exception e) {
             throw new IllegalArgumentException("measurementSaveFailed");
         }
+    }
+
+    @Override
+    public List<Measurement> getAllByFlowerId(Long id) {
+        return measurementRepository.getAllByFlowerId(id);
     }
 }
