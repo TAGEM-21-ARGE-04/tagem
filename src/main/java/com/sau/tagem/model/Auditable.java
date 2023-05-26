@@ -11,12 +11,13 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.Column;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public abstract class Auditable<U> {
+public abstract class Auditable<U> implements Serializable {
 
     @Column(name = "is_active")
     private Boolean isActive = true;
