@@ -17,6 +17,8 @@ public class GroupDTO {
 
     private String description;
 
+    private Integer flowerCount;
+
     private List<FlowerDTO> flowers;
 
     public GroupDTO(Long id, String name, String description) {
