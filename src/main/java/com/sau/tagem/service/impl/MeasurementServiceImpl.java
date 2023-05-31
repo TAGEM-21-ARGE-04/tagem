@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -32,5 +33,11 @@ public class MeasurementServiceImpl implements MeasurementService {
     @Override
     public List<Measurement> getAllByFlowerId(Long id) {
         return measurementRepository.getAllByFlowerId(id);
+    }
+
+    @Override
+    public List<Object> getLeafCountDiffForOneYear(LocalDateTime startDate, LocalDateTime endDate) {
+        //return measurementRepository.getLeafCountDifForOneYear(startDate, endDate);
+        return null;
     }
 }
