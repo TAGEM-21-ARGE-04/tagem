@@ -1,7 +1,10 @@
 package com.sau.tagem.service.impl;
 
 import com.sau.tagem.dto.request.QRCreate;
+import com.sau.tagem.enums.PaperSize;
+import com.sau.tagem.model.Flower;
 import com.sau.tagem.model.Group;
+import com.sau.tagem.repository.GroupRepository;
 import com.sau.tagem.service.FlowerService;
 import com.sau.tagem.service.QRService;
 import com.sau.tagem.utils.QRCodeGenerator;
@@ -28,6 +31,19 @@ public class QRServiceImpl implements QRService {
 
     private final Integer qrCodeSize = 500;
     private final FlowerService flowerService;
+    private final GroupRepository groupRepository;
+
+    private Integer calculateGroupQRRowC(Group group, PaperSize paperSize) {
+        Integer maxRowQRSize = paperSize.getWidth() / qrCodeSize;
+
+        Integer rowSize = group.getFlowers().size() / maxRowQRSize;
+
+        if (group.getFlowers().size() % maxRowQRSize > 0) {
+            rowSize++;
+        }
+
+        return rowSize;
+    }
 
     @Override
     public ResponseEntity<byte[]> createQR(QRCreate qr) {
@@ -38,6 +54,7 @@ public class QRServiceImpl implements QRService {
             groups.add(
                     new Group(
                             id,
+                            groupRepository.getGroupNameById(id),
                             flowerService.getAllByGroupId(id)
                     )
             );
@@ -47,6 +64,9 @@ public class QRServiceImpl implements QRService {
         int count = groups.stream().mapToInt(group -> group.getFlowers().size()).sum();
         int qrCodeVolume = count * qrCodeSize * qrCodeSize;
         int paperVolume = qr.getPaperSize().getWidth() * qr.getPaperSize().getHeight();
+
+        Integer rowSize = groups.stream().mapToInt(group -> calculateGroupQRRowC(group, qr.getPaperSize())).sum();
+        log.info("rowSize");
 
         log.info("QR Count: {}, QR VOLUME {}, PAPER VOLUME {}", count, qrCodeVolume, paperVolume);
         if (count * qrCodeSize * qrCodeSize > qr.getPaperSize().getWidth() * qr.getPaperSize().getHeight() ) {
@@ -59,34 +79,42 @@ public class QRServiceImpl implements QRService {
             BufferedImage combinedImage = new BufferedImage(qr.getPaperSize().getWidth(), qr.getPaperSize().getHeight(), BufferedImage.TYPE_INT_RGB);
             Graphics2D graphics = combinedImage.createGraphics();
 
-            int i = 0;
-            int xPosition = 0;
-            int yPosition = 0;
-            int dividerPoint = qr.getPaperSize().getWidth() / qrCodeSize;
+            int x = 0;
+            int y = 0;
+            int dividePoint = (qr.getPaperSize().getWidth() / qrCodeSize);
 
-            log.info("DIVIDERPOINT {}", dividerPoint);
-            for (List<byte[]> imageList: groupImages) {
-                for (byte[] imageData : imageList) {
-                    try {
-                        BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageData));
+            Font font = new Font("Arial", Font.PLAIN, 12);
+            Color textColor = Color.RED;
+            graphics.setFont(font);
+            graphics.setColor(textColor);
 
-                        log.info("x: {}, y: {}", xPosition, yPosition);
-                        if (i == dividerPoint) {
-                            yPosition = yPosition + qrCodeSize;
-                            xPosition = 0;
-                            i = 0;
-                        }
+            for (Group group : groups) {
+                List<byte[]> images = groupImages.get(0);
 
-                        graphics.drawImage(image, xPosition, yPosition, null);
+                String text = group.getName();
 
-                        xPosition += image.getWidth();
-                        i++;
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                y+=20;
+                x+=20;
+                graphics.drawString(text, x, y);
+                x=0;
+                y+=20;
+
+                for (int i = 0; i < group.getFlowers().size(); i++) {
+                    BufferedImage image = ImageIO.read(new ByteArrayInputStream(images.get(i)));
+
+                    if (i != 0 && i % dividePoint == 0) {
+                        y += qrCodeSize;
+                        x = 0;
                     }
+
+                    log.info("x: {} y:{} i:{}", x, y, i);
+
+                    graphics.drawImage(image, x, y, null);
+
+                    x+=qrCodeSize;
                 }
-                yPosition = yPosition + qrCodeSize;
-                xPosition = 0;
+                x=0;
+                y+=qrCodeSize;
             }
 
             ByteArrayOutputStream baos = new ByteArrayOutputStream();

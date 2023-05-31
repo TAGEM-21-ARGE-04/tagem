@@ -30,8 +30,9 @@ public class Group extends Auditable<Long> {
     @OneToMany(mappedBy = "group")
     List<Flower> flowers;
 
-    public Group(Long id, List<Flower> flowers) {
+    public Group(Long id, String name, List<Flower> flowers) {
         this.id = id;
+        this.name = name;
         this.flowers = flowers;
     }
 }
