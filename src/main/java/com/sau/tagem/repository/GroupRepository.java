@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public interface GroupRepository extends JpaRepository<Group, Long> {
     @Query(
-            "SELECT NEW com.sau.tagem.dto.GroupDTO(g.id, g.name, g.description) " +
+            "SELECT NEW com.sau.tagem.dto.GroupDTO(g.id, g.name, g.flowerCount, g.description) " +
             "FROM Group g " +
             "ORDER BY g.name  "
     )

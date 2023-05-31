@@ -14,9 +14,10 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class FlowerDTO implements Serializable {
     private Long id;
-    private String name;
+    private Integer groupIndex;
 
     public FlowerDTO(Flower flower) {
         this.id = flower.getId();
+        this.groupIndex = flower.getGroupIndex();
     }
 }

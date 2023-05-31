@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -22,12 +23,17 @@ public class GroupDTO implements Serializable {
 
     private Integer flowerCount;
 
+    private LocalDateTime startDate = LocalDateTime.now();
+
+    private LocalDateTime lastProcessDate = LocalDateTime.now();
+
     private List<FlowerDTO> flowers;
 
-    public GroupDTO(Long id, String name, String description) {
+    public GroupDTO(Long id, String name, Integer flowerCount, String description) {
         this.id = id;
         this.name = name;
         this.description = description;
+        this.flowerCount = flowerCount;
     }
 
     public GroupDTO(Group group) {
