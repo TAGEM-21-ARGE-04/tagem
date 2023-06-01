@@ -8,5 +8,5 @@ import java.util.List;
 @Data
 public class Statistic {
     private List<String> labels = new ArrayList<>();
-    private List<Object> data = new ArrayList<>();
+    private List<StatisticDataSet> dataSets = new ArrayList<>();
 }

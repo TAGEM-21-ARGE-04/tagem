@@ -1,6 +1,8 @@
 package com.sau.tagem.service.impl;
 
 import com.sau.tagem.dto.Statistic;
+import com.sau.tagem.model.Flower;
+import com.sau.tagem.model.Group;
 import com.sau.tagem.repository.StatisticRepository;
 import com.sau.tagem.service.MeasurementService;
 import com.sau.tagem.service.StatisticService;
@@ -26,6 +28,8 @@ public class StatisticServiceImpl implements StatisticService {
 
         //List<Object> objects = measurementService.getLeafCountDiffForOneYear(startDate, endDate);
 
-        return statisticRepository.getLeafCountDiffForOneYear(startDate, endDate);
+        Group group = new Group();
+        group.setFlowers(List.of(new Flower(2L), new Flower(3L), new Flower(4L), new Flower(5L), new Flower(6L)));
+        return statisticRepository.getLeafCountDiffForOneYear(startDate, endDate, group);
     }
 }
