@@ -1,14 +1,12 @@
 package com.sau.tagem.controller;
 
 import com.sau.tagem.dto.Statistic;
+import com.sau.tagem.dto.StatisticParams;
 import com.sau.tagem.service.StatisticService;
 import com.sau.tagem.utils.GenericResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin
 @RestController
@@ -18,8 +16,8 @@ public class StatisticController {
 
     private final StatisticService statisticService;
 
-    @GetMapping()
-    public GenericResponse<Statistic> getAll() {
-        return GenericResponse.success(statisticService.getStatistics());
+    @PostMapping()
+    public GenericResponse<Statistic> getAll(@RequestBody StatisticParams statisticParams) {
+        return GenericResponse.success(statisticService.getStatistics(statisticParams));
     }
 }
