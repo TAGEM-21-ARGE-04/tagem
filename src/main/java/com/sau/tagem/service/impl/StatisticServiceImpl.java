@@ -8,11 +8,14 @@ import com.sau.tagem.repository.StatisticRepository;
 import com.sau.tagem.service.MeasurementService;
 import com.sau.tagem.service.StatisticService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 
+@Log4j2
 @Service
 @RequiredArgsConstructor
 public class StatisticServiceImpl implements StatisticService {
@@ -22,11 +25,15 @@ public class StatisticServiceImpl implements StatisticService {
 
     @Override
     public Statistic getStatistics(StatisticParams statisticParams) {
-        LocalDateTime startDate = LocalDateTime.now().minusYears(1);
-        LocalDateTime endDate = LocalDateTime.now();
+        LocalDateTime startDate = LocalDateTime.now().withDayOfYear(1).withHour(0).withMinute(0).withSecond(0).withNano(0);
+        LocalDateTime endDate = LocalDateTime.now().with(TemporalAdjusters.lastDayOfYear()).withHour(23).withMinute(59).withSecond(59).withNano(999999999);
 
-        //List<Object> objects = measurementService.getLeafCountDiffForOneYear(startDate, endDate);
+        log.info("startDate: {}, endDate: {}", startDate, endDate);
 
-        return statisticRepository.getLeafCountDiffForOneYear(startDate, endDate, statisticParams);
+        if (statisticParams.getGroups() != null && statisticParams.getGroups().size() != 0) {
+            return statisticRepository.generateGroupStatistics(startDate, endDate, statisticParams);
+        }
+
+        return statisticRepository.generateFlowerStatistics(startDate, endDate, statisticParams);
     }
 }
