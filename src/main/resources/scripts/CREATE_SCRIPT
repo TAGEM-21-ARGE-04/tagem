@@ -1,0 +1,67 @@
+
+DO $$
+DECLARE
+    startDate DATE := '2023-01-01';
+    endDate DATE := '2023-06-30';
+    flowerRecord RECORD;
+    measurementDate DATE;
+   	prev_leaf_volume DECIMAL := 1;
+   	prev_leaf_count INTEGER := 0;
+   	count_increase_day_diff INTEGER := 0;
+BEGIN
+    -- Çiçek verilerini doldurun (örnek veriler)
+    CREATE TEMP TABLE flower_data (
+        flower_id BIGINT,
+        leaf_volume_growth_rate_per_day decimal,
+        leaf_volume_growth_anormal_possibilty decimal,
+        leaf_volume_growth_anormal_multiplier decimal,
+        leaf_count_growth_per_day decimal,
+        leaf_count_growth_value int,
+        leaf_count_growth_anormal_possibilty decimal,
+    	leaf_count_growth_anormal_multiplier decimal,
+    	count_increase_day_diff int
+    );
+
+    INSERT INTO flower_data (
+	    flower_id, leaf_volume_growth_rate_per_day, leaf_volume_growth_anormal_possibilty, leaf_volume_growth_anormal_multiplier,
+	    leaf_count_growth_per_day, leaf_count_growth_value, leaf_count_growth_anormal_possibilty, leaf_count_growth_anormal_multiplier)
+    VALUES
+        (2, 1.0065, 3, 1.01, /*count*/ 27, 1, 7, 2);
+
+    -- INSERT betiği oluşturuluyor
+    RAISE NOTICE '--- Insert Statements ---';
+
+    -- Her bir çiçek için INSERT ifadeleri oluşturun
+    FOR flowerRecord IN SELECT * FROM flower_data
+    LOOP
+        measurementDate := startDate;
+
+        WHILE measurementDate <= endDate
+        loop
+            prev_leaf_volume := ROUND(
+	            CASE WHEN ROUND(RANDOM() * 10) > flowerRecord.leaf_volume_growth_anormal_possibilty
+	            	THEN prev_leaf_volume * flowerRecord.leaf_volume_growth_anormal_multiplier
+	            	ELSE prev_leaf_volume * flowerRecord.leaf_volume_growth_rate_per_day end, 5
+           );
+
+	       	IF flowerRecord.leaf_count_growth_per_day = count_increase_day_diff THEN
+				count_increase_day_diff := 0;
+				prev_leaf_count := case when round(random() * 10) >  flowerRecord.leaf_count_growth_anormal_possibilty
+					then prev_leaf_count + flowerRecord.leaf_count_growth_value
+					else prev_leaf_count + flowerRecord.leaf_count_growth_anormal_multiplier end;
+			else
+				count_increase_day_diff := count_increase_day_diff + 1;
+			END IF;
+
+            RAISE NOTICE 'INSERT INTO t_measurement (flower_id, leaf_volume, leaf_count, measurement_date) VALUES (%s, %s, %s, %s);',
+                         flowerRecord.flower_id,
+                         prev_leaf_volume,
+                         prev_leaf_count,
+                         quote_literal(measurementDate::TIMESTAMP);
+
+            measurementDate := measurementDate + INTERVAL '1 day';
+        END LOOP;
+    END LOOP;
+
+    DROP TABLE flower_data;
+END$$;
