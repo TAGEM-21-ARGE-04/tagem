@@ -27,8 +27,6 @@ public class StatisticServiceImpl implements StatisticService {
 
         //List<Object> objects = measurementService.getLeafCountDiffForOneYear(startDate, endDate);
 
-        Group group = new Group();
-        group.setFlowers(List.of(new Flower(2L), new Flower(3L), new Flower(4L), new Flower(5L), new Flower(6L)));
-        return statisticRepository.getLeafCountDiffForOneYear(startDate, endDate, group, statisticParams);
+        return statisticRepository.getLeafCountDiffForOneYear(startDate, endDate, statisticParams);
     }
 }

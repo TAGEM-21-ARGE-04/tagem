@@ -1,5 +1,6 @@
 package com.sau.tagem.repository;
 
+import com.sau.tagem.dto.FlowerDTO;
 import com.sau.tagem.dto.Statistic;
 import com.sau.tagem.dto.StatisticDataSet;
 import com.sau.tagem.dto.StatisticParams;
@@ -27,11 +28,11 @@ public class StatisticRepository {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public Statistic getLeafCountDiffForOneYear(LocalDateTime startDate, LocalDateTime endDate, Group group, StatisticParams statisticParams) {
+    public Statistic getLeafCountDiffForOneYear(LocalDateTime startDate, LocalDateTime endDate, StatisticParams statisticParams) {
         Statistic statistic = new Statistic();
         statistic.setLabels(labels.get("month"));
 
-        for (Flower flower : group.getFlowers()) {
+        for (FlowerDTO flower : statisticParams.getGroup().getFlowers()) {
             statistic.getDataSets().add(new StatisticDataSet(flower.getId().toString(), 12));
         }
 
@@ -47,7 +48,7 @@ public class StatisticRepository {
             List<Object[]> rows = entityManager.createQuery(jpql)
                     .setParameter("startDate", startDate)
                     .setParameter("endDate", endDate)
-                    .setParameter("flowerIds", group.getFlowers().stream().map(flower -> flower.getId()).collect(Collectors.toList()))
+                    .setParameter("flowerIds", statisticParams.getGroup().getFlowers().stream().map(flower -> flower.getId()).collect(Collectors.toList()))
                     .getResultList();
 
             for (Object[] row : rows) {
